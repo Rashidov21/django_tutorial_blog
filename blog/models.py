@@ -30,6 +30,15 @@ class Post(models.Model):
     on_top = models.BooleanField(default=False)
     
     
+    def get_avg_rating(self):
+        # print([int(i.value) for i in self.ratings.all()])
+        sum_ratings = sum([int(i.value) for i in self.ratings.all()])
+        try:
+            return round(sum_ratings / self.ratings.all().count(),2)
+        except Exception as e:
+            return 0     
+            
+    
     def __str__(self):
         return str(self.title)
     

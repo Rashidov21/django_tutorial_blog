@@ -50,22 +50,33 @@
     </header>
     <main>
         
-                        <!-- Notifications -->
-
-                        <div class="toast position-fixed top-0 end-0 m-1  text-bg-success show" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header">
-                                <strong class="me-auto">Success !</strong>
-                                <small>Message</small>
-                                <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body d-flex">
-                                Hello, world! This is a toast message.
-                            </div>
-                        </div>
-                        <br>
-
-                        <!-- Notifications -->
+      <!-- Notifications -->
+      {% if messages %}
+      {% for message in messages %}
+      <div
+        class="toast position-fixed top-0 end-0 m-1 text-bg-{% if message.tags %}{{ message.tags }}{% endif %} show"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="me-auto">{{message}} !</strong>
+          <small>Message</small>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body d-flex">
+          {{message}}
+        </div>
+      </div>
+      {% endfor %}
+      <br />
+      {% endif %}
+      <!-- Notifications -->
 
         <section>
 
@@ -73,14 +84,14 @@
                 <div class="d-flex flex-wrap my-3">
                     {% for cat in categories %}
                       <div class="d-flex flex-wrap mx-3 my-2">
-                          <button type="button" class="btn btn-primary position-relative">
-                              {{ cat.name }}
-                              <span
-                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                  {{cat.posts.all.count}}
-                                  <span class="visually-hidden">unread messages</span>
-                              </span>
-                          </button>
+                        <a href="{% url 'blog:category_list' cat.slug %}" class="btn btn-primary position-relative">
+                            {{ cat.name }}
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{cat.posts.all.count}}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </a>
                       </div>
                     {% endfor %}
                   </div>
@@ -99,15 +110,17 @@
                                     <div class="d-flex justify-content-between flex-wrap">
                                         <div class="post-rating">
                                             <span>Rating:</span>
-                                            <span class="fs-3 fw-bold text-muted">3.2</span>
+                                            <span class="fs-3 fw-bold text-muted">
+                                                {{post.get_avg_rating}}
+                                            </span>
                                         </div>
                                         <div class="post-set-rating">
                                             <p class="card-text fs-4">
-                                                <a href=""><i class="bi bi-star"></i></a>
-                                                <a href=""><i class="bi bi-star"></i></a>
-                                                <a href=""><i class="bi bi-star"></i></a>
-                                                <a href=""><i class="bi bi-star"></i></a>
-                                                <a href=""><i class="bi bi-star"></i></a>
+                                                <a href="{% url 'blog:set_rating' 1 post.id %}"><i class="bi bi-star"></i></a>
+                                                <a href="{% url 'blog:set_rating' 2 post.id %}"><i class="bi bi-star"></i></a>
+                                                <a href="{% url 'blog:set_rating' 3 post.id %}"><i class="bi bi-star"></i></a>
+                                                <a href="{% url 'blog:set_rating' 4 post.id %}"><i class="bi bi-star"></i></a>
+                                                <a href="{% url 'blog:set_rating' 5 post.id %}"><i class="bi bi-star"></i></a>
                                             </p>
                                         </div>
                                     </div>
@@ -185,29 +198,17 @@
 
                         <span class="fs-5 fw-semibold">Related posts</span>
                         <ol class="list-group list-group-numbered">
+                            {% for related_post in related_posts %}
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold">Subheading dadas adasda as af afas a fafase</div>
+                                    <div class="fw-bold">{{related_post.title}}</div>
                                 </div>
                                 <span class="badge bg-primary rounded-pill">
                                     <i class="bi bi-eye"></i>
-                                    14
+                                    {{related_post.views}}
                                 </span>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">Subheading</div>
-                                    Content for list item
-                                </div>
-                                <span class="badge bg-primary rounded-pill">14</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">Subheading</div>
-                                    Content for list item
-                                </div>
-                                <span class="badge bg-primary rounded-pill">14</span>
-                            </li>
+                            {% endfor %}
                         </ol>
                     </div>
                 </div>
