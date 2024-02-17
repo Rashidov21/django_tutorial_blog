@@ -37,7 +37,6 @@ class Post(models.Model):
             return round(sum_ratings / self.ratings.all().count(),2)
         except Exception as e:
             return 0     
-            
     
     def __str__(self):
         return str(self.title)
